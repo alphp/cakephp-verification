@@ -421,7 +421,7 @@ class VerificationComponent extends Component
 
         $controller = $this->getController();
         $users = $this->usersTable($controller);
-        $userEntity = $users->get((int)($user->id ?? 0));
+        $userEntity = $users->get(($user->id ?? 0));
         $userEntity->email_verification_token = null;
         $userEntity->email_verification_token_expires = null;
         $users->saveOrFail($userEntity);
@@ -574,7 +574,7 @@ class VerificationComponent extends Component
 
             $controller = $this->getController();
             $users = $this->usersTable($controller);
-            $userEntity = $users->get((int)($user->id ?? 0));
+            $userEntity = $users->get(($user->id ?? 0));
             $userEntity->email_verification_token = $token;
             $userEntity->email_verification_token_expires = $expires;
             $users->saveOrFail($userEntity);
