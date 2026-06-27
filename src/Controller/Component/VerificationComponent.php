@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace CakeVerification\Controller\Component;
 
-use App\Mailer\UserMailer;
+use CakeVerification\Mailer\UserMailer;
 use Authentication\Controller\Component\AuthenticationComponent;
 use Authentication\Identity;
 use Authentication\IdentityInterface;
@@ -515,22 +515,24 @@ class VerificationComponent extends Component
         if (is_callable($config['delivery'] ?? null)) {
             return $driver;
         }
-        if (!class_exists(UserMailer::class)) {
-            return $driver;
+
+        $mailer = $config['delivery'] ?? UserMailer::class;
+        if (!class_exists($mailer)) {
+            $mailer = UserMailer::class;
         }
 
         $delivery = function (
             ServerRequestInterface $request,
             IdentityInterface $identity,
             string $code,
-        ): void {
+        ) use ($mailer): void {
             $resolved = $this->resolveIdentity($identity);
             $user = $resolved?->getOriginalData();
             if (!is_object($user)) {
                 return;
             }
 
-            (new UserMailer())->send('emailOtp', [$user, $code]);
+            (new $mailer())->send('emailOtp', [$user, $code]);
         };
 
         return $driver->withConfig(['delivery' => $delivery]);
