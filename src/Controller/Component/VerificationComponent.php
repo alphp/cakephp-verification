@@ -551,15 +551,17 @@ class VerificationComponent extends Component
         if (is_callable($config['delivery'] ?? null)) {
             return $driver;
         }
-        if (!class_exists(UserMailer::class)) {
-            return $driver;
+
+        $mailer = $config['delivery'] ?? UserMailer::class;
+        if (!class_exists($mailer)) {
+            $mailer = UserMailer::class;
         }
 
         $delivery = function (
             ServerRequestInterface $request,
             IdentityInterface $identity,
             array $driverConfig,
-        ): void {
+        ) use ($mailer): void {
             $resolved = $this->resolveIdentity($identity);
             $user = $resolved?->getOriginalData();
             if (!is_object($user)) {
@@ -585,7 +587,7 @@ class VerificationComponent extends Component
                 ['controller' => 'Users', 'action' => 'verifyEmail', $token],
                 true,
             );
-            (new UserMailer())->send('emailVerify', [$userEntity, $verifyUrl]);
+            (new $mailer())->send('emailVerify', [$userEntity, $verifyUrl]);
         };
 
         return $driver->withConfig(['delivery' => $delivery]);
