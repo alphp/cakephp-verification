@@ -1210,13 +1210,13 @@ class VerificationComponent extends Component
      * @param \Authentication\IdentityInterface $identity Identity
      * @return int
      */
-    private function identityId(IdentityInterface $identity): int
+    private function identityId(IdentityInterface $identity): int|string
     {
         $id = $identity->getIdentifier();
         if (is_array($id)) {
             $id = $id['id'] ?? 0;
         }
 
-        return (int)$id;
+        return $id;
     }
 }
