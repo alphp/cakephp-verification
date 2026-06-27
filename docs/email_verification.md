@@ -41,14 +41,14 @@ Cache (see [otp_storage.md](api/otp_storage.md)).
     'emailVerify' => [
         'enabled' => true,
         'options'  => [
-            'delivery' => null,   // null = use App\Mailer\UserMailer (see below)
+            'delivery' => null,   // null = use CakeVerification\Mailer\UserMailer::class (see below)
         ],
     ],
     'emailOtp' => [
         'enabled' => true,
         'options'  => [
             'ttl'      => 600,    // code valid for 10 minutes
-            'delivery' => null,   // null = use App\Mailer\UserMailer (see below)
+            'delivery' => null,   // null = use CakeVerification\Mailer\UserMailer::class (see below)
         ],
     ],
 ],

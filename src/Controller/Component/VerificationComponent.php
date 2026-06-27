@@ -525,14 +525,19 @@ class VerificationComponent extends Component
             ServerRequestInterface $request,
             IdentityInterface $identity,
             string $code,
-        ) use ($mailer): void {
+        ) use ($mailer, $config): void {
             $resolved = $this->resolveIdentity($identity);
             $user = $resolved?->getOriginalData();
             if (!is_object($user)) {
                 return;
             }
+            $emailField = (string)($config['fields']['email'] ?? 'email');
+            $email = (string)($user->{$emailField} ?? '');
+            if ($email === '') {
+                return;
+            }
 
-            (new $mailer())->send('emailOtp', [$user, $code]);
+            (new $mailer())->setTo($email)->send('emailOtp', [$user, $code]);
         };
 
         return $driver->withConfig(['delivery' => $delivery]);
@@ -587,7 +592,7 @@ class VerificationComponent extends Component
                 ['controller' => 'Users', 'action' => 'verifyEmail', $token],
                 true,
             );
-            (new $mailer())->send('emailVerify', [$userEntity, $verifyUrl]);
+            (new $mailer())->setTo($email)->send('emailVerify', [$userEntity, $verifyUrl]);
         };
 
         return $driver->withConfig(['delivery' => $delivery]);

@@ -152,7 +152,7 @@ its options tuned:
     'emailVerify' => [
         'enabled' => true,
         'options' => [
-            'delivery' => null,  // custom delivery closure; null = default mailer
+            'delivery' => null,  // custom delivery closure; null = default mailer (CakeVerification\Mailer\UserMailer::class)
         ],
     ],
 
