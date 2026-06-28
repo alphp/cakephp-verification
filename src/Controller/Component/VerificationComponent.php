@@ -924,8 +924,17 @@ class VerificationComponent extends Component
         }
         $selectedDriver = is_array($prefs) ? ($prefs['otp_driver'] ?? null) : null;
 
+        $options = [];
+        foreach ($availableDrivers as $driver) {
+            $options[$driver] = match($driver) {
+                'emailOtp' => __d('verification', 'emailOtp'),
+                'smsOtp' => __d('verification', 'smsOtp'),
+                'totp' => __d('verification', 'totp'),
+            };
+        }
+
         $controller->set([
-            'availableDrivers' => $availableDrivers,
+            'availableDrivers' => $options,
             'selectedDriver' => $selectedDriver,
         ]);
 
