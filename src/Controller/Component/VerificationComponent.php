@@ -544,6 +544,26 @@ class VerificationComponent extends Component
     }
 
     /**
+     * Return available OTP drivers for Form select
+     *
+     * @return array
+     */
+    public function getAvailableOtpDrivers(): array
+    {
+        $availableDrivers = $this->getService()->getAvailableOtpDrivers();
+        $options = [];
+        foreach ($availableDrivers as $driver) {
+            $options[$driver] = match($driver) {
+                'emailOtp' => __d('verification', 'emailOtp'),
+                'smsOtp' => __d('verification', 'smsOtp'),
+                'totp' => __d('verification', 'totp'),
+            };
+        }
+
+        return $options;
+    }
+
+    /**
      * Apply default email-verify delivery callback.
      *
      * @param \CakeVerification\Verificator\VerificationVerificatorInterface $driver Driver
